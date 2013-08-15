@@ -1,0 +1,77 @@
+#!/usr/bin/ruby
+require 'net/ssh'
+
+servers = {
+	    "10.194.101.208" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	    "10.194.101.209" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	    "10.194.101.205" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	    "10.194.101.204" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	    "10.194.101.203" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	    "10.194.101.202" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	    "10.194.101.201" => [
+		:uname => 'admin',
+		:password => 'juniper1'
+            ],	
+	  }
+
+# Loop through servers
+servers.each{ |server, cred|
+  # Working on server
+  puts("Working on server #{server}")
+
+  fork do
+    puts "child, pid #{Process.pid} sleeping..."
+    sleep(rand(10,20))
+    puts "child exiting #{Process.pid}"
+  end
+  puts "parent exiting"
+}
+
+
+exit
+Net::SSH.start('10.194.101.210', 'admin', :password => "juniper1") do |ssh|
+  # capture all stderr and stdout output from a remote process
+  output = ssh.exec!("hostname")
+
+  # open a new channel and configure a minimal set of callbacks, then run
+  # the event loop until the channel finishes (closes)
+  channel = ssh.open_channel do |ch|
+    ch.exec "show configuration | display set" do |ch, success|
+      raise "could not execute command" unless success
+
+      # "on_data" is called when the process writes something to stdout
+      ch.on_data do |c, data|
+        $stdout.print data
+      end
+
+      # "on_extended_data" is called when the process writes something to stderr
+      ch.on_extended_data do |c, type, data|
+        $stderr.print data
+      end
+
+      ch.exec "exit"
+      ch.on_close { puts "done!" }
+    end
+  end
+
+  channel.wait
+
+end
