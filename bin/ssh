@@ -2,34 +2,10 @@
 require 'net/ssh'
 
 servers = {
-	    "10.194.101.208" => [
+	    "10.1.1.1" => [
 		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
-	    "10.194.101.209" => [
-		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
-	    "10.194.101.205" => [
-		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
-	    "10.194.101.204" => [
-		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
-	    "10.194.101.203" => [
-		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
-	    "10.194.101.202" => [
-		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
-	    "10.194.101.201" => [
-		:uname => 'admin',
-		:password => 'juniper1'
-            ],	
+		:password => 'admin'
+            ],
 	  }
 
 # Loop through servers
